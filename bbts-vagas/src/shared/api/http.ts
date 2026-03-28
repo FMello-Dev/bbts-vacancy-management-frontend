@@ -1,0 +1,64 @@
+/// <reference types="vite/client" />
+
+const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+
+function getToken(): string | null {
+  return sessionStorage.getItem('bbts_token');
+}
+
+interface RequestOptions extends RequestInit {
+  params?: Record<string, string>;
+}
+
+async function request<T>(
+  path: string,
+  options: RequestOptions = {}
+): Promise<T> {
+  const { params, ...init } = options;
+  const token = getToken();
+
+  const url = new URL(`${BASE_URL}${path}`, window.location.origin);
+  if (params) {
+    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  }
+
+  const response = await fetch(url.toString(), {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...init.headers,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+    throw new Error(error.message ?? `HTTP ${response.status}`);
+  }
+
+  // 204 No Content
+  if (response.status === 204) return undefined as T;
+  return response.json() as Promise<T>;
+}
+
+export const http = {
+  get: <T>(path: string, options?: RequestOptions) =>
+    request<T>(path, { method: 'GET', ...options }),
+
+  post: <T>(path: string, body?: unknown, options?: RequestOptions) =>
+    request<T>(path, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      ...options,
+    }),
+
+  patch: <T>(path: string, body?: unknown, options?: RequestOptions) =>
+    request<T>(path, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      ...options,
+    }),
+
+  delete: <T>(path: string, options?: RequestOptions) =>
+    request<T>(path, { method: 'DELETE', ...options }),
+};
