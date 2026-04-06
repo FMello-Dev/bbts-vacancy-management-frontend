@@ -53,7 +53,7 @@ export default function VacancyCreatePage() {
   } = methods;
 
   const onSubmit = (data: FormValues) => {
-    createVacancy(data as any, {
+    createVacancy(data, {
       onSuccess: (vacancy) => navigate(`/vacancies/${vacancy.id}`),
     });
   };

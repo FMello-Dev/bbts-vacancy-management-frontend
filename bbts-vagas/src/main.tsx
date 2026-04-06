@@ -6,7 +6,7 @@ import '@fontsource/inter/700.css';
 import { App } from './app/App';
 
 async function enableMocking() {
-  if (import.meta.env.MODE !== 'development') return;
+  if (import.meta.env.VITE_USE_MOCK !== 'true') return;
   const { worker } = await import('./mocks/browser');
   return worker.start({ onUnhandledRequest: 'bypass' });
 }
