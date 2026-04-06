@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { http } from '../../../shared/api/http';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
-import { CandidateMatch } from '../../../shared/types';
+import { CandidateExplanation, CandidateMatch } from '../../../shared/types';
 
 interface BackendCandidate {
   id: number;
@@ -10,12 +10,7 @@ interface BackendCandidate {
   headline: string;
   location: string;
   score: number;
-  explanationJson: {
-    metRequirements: number;
-    totalRequirements: number;
-    missingMandatory: string[];
-    strengths: string[];
-  };
+  explanation: CandidateExplanation;
 }
 
 export function useCandidatesByVacancy(vacancyId: string) {
@@ -29,7 +24,7 @@ export function useCandidatesByVacancy(vacancyId: string) {
           headline: c.headline,
           location: c.location,
           score: c.score,
-          explanation: c.explanationJson,
+          explanation: c.explanation,
         }))
       ),
     enabled: !!vacancyId,
