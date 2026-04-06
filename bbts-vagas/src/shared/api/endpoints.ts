@@ -1,6 +1,6 @@
 export const ENDPOINTS = {
   LOGIN: '/auth/login',
-  ME: '/me',
+  ME: '/auth/me',
   VACANCIES: '/vacancies',
   VACANCY: (id: string) => `/vacancies/${id}`,
   SUBMIT_VACANCY: (id: string) => `/vacancies/${id}/submit`,

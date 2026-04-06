@@ -6,7 +6,8 @@ export function useApproveVacancy() {
   const qc = useQueryClient();
 
   return useMutation<unknown, Error, string>({
-    mutationFn: (vacancyId) => http.post(ENDPOINTS.APPROVE(vacancyId)),
+    mutationFn: (vacancyId) =>
+      http.post(ENDPOINTS.APPROVE(vacancyId), { justification: null }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['approvals'] });
       qc.invalidateQueries({ queryKey: ['vacancies'] });
