@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { http } from '../../shared/api/http';
 import { ENDPOINTS } from '../../shared/api/endpoints';
-import type { User } from '../../shared/types';
+import type { User, UserRole } from '../../shared/types';
 import { useAuth } from './authContext';
 import { AppButton } from '../../shared/components/AppButton';
 
@@ -17,6 +17,18 @@ interface LoginResponse {
   token: string;
   user: User;
 }
+
+interface BackendLoginResponse {
+  accessToken: string;  // já convertido pelo toCamel
+  userId: number;
+  name: string;
+  role: string;
+}
+
+const roleToUserId: Record<string, number> = {
+  REQUESTER: 1,
+  RH: 2,
+};
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
@@ -27,7 +39,21 @@ export default function LoginPage() {
   }, [isAuthenticated, navigate]);
 
   const mutation = useMutation<LoginResponse, Error, { role: string }>({
-    mutationFn: (body) => http.post(ENDPOINTS.LOGIN, body),
+    mutationFn: async (body) => {
+      const res = await http.post<BackendLoginResponse>(
+        ENDPOINTS.LOGIN,
+        { user_id: roleToUserId[body.role] }
+      );
+
+      return {
+        token: res.accessToken,
+        user: {
+          id: String(res.userId),       // number → string
+          name: res.name,
+          role: res.role as UserRole,
+        },
+      };
+    },
     onSuccess: ({ token, user }) => login(user, token),
   });
 
@@ -45,14 +71,7 @@ export default function LoginPage() {
       <Card sx={{ maxWidth: 440, width: '100%', border: 'none', borderRadius: 4 }}>
         <CardContent sx={{ p: 5 }}>
           <Box display="flex" alignItems="center" gap={1.5} mb={4}>
-            <Box
-              sx={{
-                bgcolor: 'primary.main',
-                borderRadius: 2,
-                p: 1,
-                display: 'flex',
-              }}
-            >
+            <Box sx={{ bgcolor: 'primary.main', borderRadius: 2, p: 1, display: 'flex' }}>
               <WorkOutlineIcon sx={{ fontSize: 32, color: 'white' }} />
             </Box>
             <Box>
@@ -93,9 +112,7 @@ export default function LoginPage() {
             </AppButton>
 
             <Divider sx={{ my: 0.5 }}>
-              <Typography variant="caption" color="text.secondary">
-                ou
-              </Typography>
+              <Typography variant="caption" color="text.secondary">ou</Typography>
             </Divider>
 
             <AppButton
