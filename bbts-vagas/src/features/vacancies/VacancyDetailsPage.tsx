@@ -61,7 +61,7 @@ export default function VacancyDetailsPage() {
           <AppButton
             variant="outlined"
             startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/vacancies`, {replace: true})}
           >
             Voltar
           </AppButton>

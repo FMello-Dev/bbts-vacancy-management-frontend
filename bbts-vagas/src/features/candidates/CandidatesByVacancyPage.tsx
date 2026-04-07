@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableRow,
   Skeleton, Alert, Box, Typography, LinearProgress, Chip,
 } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, replace } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -53,7 +53,7 @@ export default function CandidatesByVacancyPage() {
         <AppButton
           variant="outlined"
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(`/vacancies/${id}`)}
+          onClick={() => navigate(`/vacancies/${id}`, {replace: true})}
         >
           Voltar à Vaga
         </AppButton>
