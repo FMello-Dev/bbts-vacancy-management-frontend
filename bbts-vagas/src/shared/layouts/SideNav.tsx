@@ -13,6 +13,7 @@ import {
 import WorkIcon from '@mui/icons-material/Work';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/authContext';
 
@@ -32,6 +33,7 @@ const REQUESTER_ITEMS: NavItem[] = [
 const RH_ITEMS: NavItem[] = [
   { label: 'Fila de Aprovação', path: '/approvals', icon: <PendingActionsIcon /> },
   { label: 'Todas as Vagas', path: '/vacancies', icon: <WorkIcon /> },
+  { label: 'Importar Candidatos', path: '/candidates/import', icon: <UploadFileIcon /> },
 ];
 
 export function SideNav({ open }: { open: boolean }) {
