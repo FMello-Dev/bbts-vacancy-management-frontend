@@ -10,6 +10,8 @@ const VacancyCreatePage       = lazy(() => import('../features/vacancies/Vacancy
 const VacancyDetailsPage      = lazy(() => import('../features/vacancies/VacancyDetailsPage'));
 const ApprovalsQueuePage      = lazy(() => import('../features/approvals/ApprovalsQueuePage'));
 const CandidatesByVacancyPage = lazy(() => import('../features/candidates/CandidatesByVacancyPage'));
+const CandidatesListPage      = lazy(() => import('../features/candidates/CandidatesListPage'));
+const CandidateDetailPage     = lazy(() => import('../features/candidates/CandidateDetailPage'));
 const ImportCandidatesPage    = lazy(() => import('../features/imports/ImportCandidatesPage'));
 
 const Loading = () => <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh"><CircularProgress /></Box>;
@@ -32,10 +34,12 @@ const router = createBrowserRouter([
   { path: '/login', element: S(LoginPage) },
   { path: '/', element: <AppShell />, children: [
     { index: true, element: <RootRedirect /> },
-    { element: <PrivateRoute allowedRoles={['REQUESTER', 'RH']} />, children: [
+    { element: <PrivateRoute allowedRoles={['REQUESTER','RH']} />, children: [
       { path: 'vacancies', element: S(VacanciesListPage) },
       { path: 'vacancies/:id', element: S(VacancyDetailsPage) },
       { path: 'vacancies/:id/candidates', element: S(CandidatesByVacancyPage) },
+      { path: 'candidates', element: S(CandidatesListPage) },
+      { path: 'candidates/:id', element: S(CandidateDetailPage) },
     ]},
     { element: <PrivateRoute allowedRoles={['REQUESTER']} />, children: [
       { path: 'vacancies/new', element: S(VacancyCreatePage) },

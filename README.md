@@ -1,6 +1,6 @@
 # BBTS — Gestão de Vagas · Frontend
 
-Interface web para gestão de vagas, aprovação RH e ranking de candidatos.  
+Interface web para gestão de vagas, aprovação RH, importação de currículos via IA e ranking de candidatos.  
 Stack: **React · TypeScript · Vite · Material UI · TanStack Query**
 
 ---
@@ -8,11 +8,10 @@ Stack: **React · TypeScript · Vite · Material UI · TanStack Query**
 ## Pré-requisitos
 
 - Node.js 18 ou superior → [nodejs.org](https://nodejs.org) (recomendo versão LTS)
-- npm — já vem junto com o Node
+- npm — já vem com o Node
 - Backend rodando em `http://localhost:8000`
 
 ```bash
-# Verificar instalação
 node -v
 npm -v
 ```
@@ -33,9 +32,9 @@ npm install
 npx msw init public/ --save
 
 # 4. Configurar variáveis de ambiente
-# Crie um arquivo .env na raiz de bbts-vagas/
-echo "VITE_API_URL=http://localhost:8000" > .env
-echo "VITE_USE_MOCK=false" >> .env
+# Crie o arquivo .env na raiz de bbts-vagas/
+VITE_API_URL=http://localhost:8000
+VITE_USE_MOCK=false
 
 # 5. Rodar
 npm run dev
@@ -47,12 +46,10 @@ Acesse: **http://localhost:5173**
 
 ## Variáveis de ambiente
 
-| Variável | Valor | Descrição |
-|----------|-------|-----------|
+| Variável | Valor padrão | Descrição |
+|----------|-------------|-----------|
 | `VITE_API_URL` | `http://localhost:8000` | URL do backend |
 | `VITE_USE_MOCK` | `false` | `true` para usar dados mockados sem backend |
-
-> Com `VITE_USE_MOCK=true` o sistema usa o MSW para simular as respostas — útil quando o backend não está disponível.
 
 ---
 
@@ -61,50 +58,55 @@ Acesse: **http://localhost:5173**
 ```
 src/
 ├── app/
-│   ├── App.tsx              # Componente raiz
-│   ├── router.tsx           # Rotas + guards de autenticação
-│   ├── providers.tsx        # QueryClientProvider + ThemeProvider
-│   ├── queryClient.ts       # Configuração do TanStack Query
+│   ├── App.tsx
+│   ├── router.tsx           # Rotas + guards de autenticação por role
+│   ├── providers.tsx
+│   ├── queryClient.ts
 │   └── theme.ts             # Tema MUI (cores BBTS)
 ├── features/
 │   ├── auth/
-│   │   ├── LoginPage.tsx    # Tela de login (selecionar perfil)
+│   │   ├── LoginPage.tsx    # Seleção de perfil (REQUESTER / RH)
 │   │   └── authContext.tsx  # Contexto de autenticação + token
 │   ├── vacancies/
-│   │   ├── VacanciesListPage.tsx    # Lista de vagas
-│   │   ├── VacancyCreatePage.tsx   # Criar nova vaga
-│   │   ├── VacancyDetailsPage.tsx  # Detalhe + submeter para aprovação
+│   │   ├── VacanciesListPage.tsx
+│   │   ├── VacancyCreatePage.tsx
+│   │   ├── VacancyDetailsPage.tsx
 │   │   ├── components/
-│   │   │   ├── RequirementsField.tsx  # Campo dinâmico de requisitos
-│   │   │   └── VacancyStatusChip.tsx  # Chip colorido por status
+│   │   │   ├── RequirementsField.tsx
+│   │   │   └── VacancyStatusChip.tsx
 │   │   └── hooks/
 │   │       ├── useVacancies.ts
 │   │       ├── useVacancy.ts
 │   │       ├── useCreateVacancy.ts
 │   │       └── useSubmitVacancy.ts
 │   ├── approvals/
-│   │   ├── ApprovalsQueuePage.tsx   # Fila de aprovação (RH)
+│   │   ├── ApprovalsQueuePage.tsx
 │   │   └── hooks/
 │   │       ├── usePendingApprovals.ts
 │   │       ├── useApproveVacancy.ts
 │   │       └── useRejectVacancy.ts
 │   ├── candidates/
-│   │   ├── CandidatesByVacancyPage.tsx  # Ranking de candidatos
+│   │   ├── CandidatesByVacancyPage.tsx  # Ranking por vaga
+│   │   ├── CandidatesListPage.tsx       # Base de candidatos + filtros (Sprint 3)
+│   │   ├── CandidateDetailPage.tsx      # Perfil completo (Sprint 3)
 │   │   └── hooks/
-│   │       └── useCandidatesByVacancy.ts
-│   └── imports/                         # Sprint 2
-│       ├── ImportCandidatesPage.tsx     # Importar via CSV ou JSON
-│       └── useImportCandidates.ts       # Hooks de upload
+│   │       ├── useCandidatesByVacancy.ts
+│   │       ├── useCandidates.ts         # Sprint 3
+│   │       └── useCandidateDetail.ts    # Sprint 3
+│   └── imports/
+│       ├── ImportCandidatesPage.tsx     # PDF (IA) + CSV + JSON
+│       ├── useImportPdf.ts              # Sprint 3
+│       └── useImportCandidates.ts
 ├── shared/
 │   ├── api/
-│   │   ├── http.ts        # Cliente HTTP + toCamel + auth header
-│   │   └── endpoints.ts   # Centraliza todas as URLs da API
+│   │   ├── http.ts          # Cliente HTTP + toCamel + auth header
+│   │   └── endpoints.ts     # Todas as URLs da API
 │   ├── types/
-│   │   └── index.ts       # Todos os tipos TypeScript do domínio
-│   ├── components/        # Componentes reutilizáveis (AppButton, AppDialog...)
-│   ├── layouts/           # AppShell, SideNav, TopBar
+│   │   └── index.ts         # Todos os tipos TypeScript do domínio
+│   ├── components/          # AppButton, AppDialog, AppPage, AppSection...
+│   ├── layouts/             # AppShell, SideNav, TopBar
 │   └── utils/
-└── mocks/                 # MSW handlers para dev sem backend
+└── mocks/                   # MSW handlers para dev sem backend
 ```
 
 ---
@@ -116,16 +118,16 @@ src/
 | `/login` | Seleção de perfil | Todos |
 | `/vacancies` | Lista de vagas | REQUESTER (só suas) / RH (todas) |
 | `/vacancies/new` | Criar nova vaga | REQUESTER |
-| `/vacancies/:id` | Detalhe da vaga + submeter | Todos |
-| `/vacancies/:id/candidates` | Ranking de candidatos | Todos |
+| `/vacancies/:id` | Detalhe + submeter para aprovação | Todos |
+| `/vacancies/:id/candidates` | Ranking de candidatos por vaga | Todos |
+| `/candidates` | Base de candidatos com filtros por skill e localização | Todos |
+| `/candidates/:id` | Perfil completo do candidato | Todos |
 | `/approvals` | Fila de aprovação | RH |
-| `/candidates/import` | Importar candidatos CSV/JSON | RH |
+| `/candidates/import` | Importar via PDF (IA), CSV ou JSON | RH |
 
 ---
 
 ## Login
-
-O sistema usa login simplificado por perfil (Sprint 1/2):
 
 | Botão | user_id | Role | Redireciona para |
 |-------|---------|------|-----------------|
@@ -134,16 +136,29 @@ O sistema usa login simplificado por perfil (Sprint 1/2):
 
 ---
 
+## Importação de currículos via IA
+
+O fluxo de upload PDF funciona assim:
+
+1. RH acessa `/candidates/import` → aba **PDF (IA)**
+2. Faz upload do currículo `.pdf`
+3. O frontend envia para `POST /candidates/import/pdf`
+4. O backend envia o PDF para o **Google Gemini**
+5. O Gemini extrai: nome, skills, experiências, formação, idiomas, certificações
+6. Os dados são normalizados (sinônimos) e salvos no banco
+7. O frontend exibe o perfil do candidato salvo + botão "Ver perfil completo"
+
+---
+
 ## Integração com o backend
 
-Toda comunicação com a API passa por `src/shared/api/http.ts`:
+Toda comunicação passa por `src/shared/api/http.ts`:
 
-- Adiciona automaticamente o header `Authorization: Bearer <token>`
+- Adiciona `Authorization: Bearer <token>` automaticamente
 - Converte respostas de `snake_case` → `camelCase` automaticamente
 - Redireciona para `/login` em caso de 401
-- Erros padronizados via `error.detail` do FastAPI
 
-Para usar mock sem backend, altere no `.env`:
+Para rodar sem backend (modo mock):
 ```env
 VITE_USE_MOCK=true
 ```
@@ -152,7 +167,6 @@ VITE_USE_MOCK=true
 
 ## Próximas sprints
 
-- [ ] Sprint 3: Tela de listagem e busca de candidatos com filtros
-- [ ] Sprint 3: Tela de detalhe do candidato (perfil completo)
-- [ ] Sprint 3: Dashboard com KPIs por vaga
+- [ ] Sprint 4: Dashboard com KPIs por vaga (total candidatos, score médio, gaps)
 - [ ] Sprint 4: Role MANAGER com visão de área
+- [ ] Sprint 5: Exportação de ranking para CSV
