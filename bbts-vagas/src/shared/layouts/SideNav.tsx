@@ -13,6 +13,7 @@ import {
 import WorkIcon from '@mui/icons-material/Work';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import PeopleIcon from '@mui/icons-material/People';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/authContext';
@@ -27,12 +28,14 @@ interface NavItem {
 
 const REQUESTER_ITEMS: NavItem[] = [
   { label: 'Minhas Vagas', path: '/vacancies', icon: <WorkIcon /> },
+  { label: 'Candidatos', path: '/candidates', icon: <PeopleIcon /> },
   { label: 'Criar Vaga', path: '/vacancies/new', icon: <AddCircleOutlineIcon /> },
 ];
 
 const RH_ITEMS: NavItem[] = [
   { label: 'Fila de Aprovação', path: '/approvals', icon: <PendingActionsIcon /> },
   { label: 'Todas as Vagas', path: '/vacancies', icon: <WorkIcon /> },
+  { label: 'Candidatos', path: '/candidates', icon: <PeopleIcon /> },
   { label: 'Importar Candidatos', path: '/candidates/import', icon: <UploadFileIcon /> },
 ];
 

@@ -7,8 +7,10 @@ export const ENDPOINTS = {
   APPROVE: (id: string) => `/approvals/${id}/approve`,
   REJECT: (id: string) => `/approvals/${id}/reject`,
   CANDIDATES: (vacancyId: string) => `/vacancies/${vacancyId}/candidates`,
+  CANDIDATES_LIST: '/candidates',
   CANDIDATE_DETAIL: (id: string) => `/candidates/${id}`,
   IMPORT_JSON: '/candidates/import/json',
   IMPORT_CSV: '/candidates/import/csv',
+  IMPORT_PDF: '/candidates/import/pdf',
   IMPORT_TEMPLATE: '/candidates/import/template',
 } as const;

@@ -202,6 +202,8 @@ export default function CandidatesByVacancyPage() {
               </Box>
             </Box>
 
+
+
             {selected.explanation.strengths.length > 0 && (
               <Box mb={3}>
                 <Typography variant="subtitle2" fontWeight={700} mb={1.5}>
@@ -254,6 +256,13 @@ export default function CandidatesByVacancyPage() {
                 </Box>
               </Box>
             )}
+            {!selected.explanation.locationMatch && (
+  <Box mt={2} sx={{ bgcolor: 'warning.light', borderRadius: 2, p: 1.5 }}>
+    <Typography variant="caption" color="warning.dark" fontWeight={600}>
+      ⚠️ Candidato fora da localização da vaga (-10% no score)
+    </Typography>
+  </Box>
+)}
           </Box>
         )}
       </AppDialog>
