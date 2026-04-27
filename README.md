@@ -143,7 +143,7 @@ O fluxo de upload PDF funciona assim:
 1. RH acessa `/candidates/import` → aba **PDF (IA)**
 2. Faz upload do currículo `.pdf`
 3. O frontend envia para `POST /candidates/import/pdf`
-4. O backend envia o PDF para o **Google Gemini**
+4. O backend envia o PDF para o **Groq**
 5. O Gemini extrai: nome, skills, experiências, formação, idiomas, certificações
 6. Os dados são normalizados (sinônimos) e salvos no banco
 7. O frontend exibe o perfil do candidato salvo + botão "Ver perfil completo"
