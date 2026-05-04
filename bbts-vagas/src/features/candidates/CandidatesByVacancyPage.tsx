@@ -13,6 +13,9 @@ import { AppSection } from '../../shared/components/AppSection';
 import { AppButton } from '../../shared/components/AppButton';
 import { AppDialog } from '../../shared/components/AppDialog';
 import type { CandidateMatch } from '../../shared/types';
+// ADICIONAR junto aos imports existentes
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useRescoreVacancy } from './hooks/useRescoreVacancy';
 
 function ScoreBar({ score }: { score: number }) {
   const color =
@@ -40,6 +43,9 @@ export default function CandidatesByVacancyPage() {
   const { data: candidates, isLoading, isError } = useCandidatesByVacancy(id!);
   const [selected, setSelected] = useState<CandidateMatch | null>(null);
 
+  // ADICIONAR estas duas linhas
+  const { mutate: rescore, isPending: isRescoring } = useRescoreVacancy(id!);
+
   return (
     <AppPage
       title="Candidatos Sugeridos"
@@ -50,14 +56,26 @@ export default function CandidatesByVacancyPage() {
         { label: 'Candidatos' },
       ]}
       actions={
-        <AppButton
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(`/vacancies/${id}`, {replace: true})}
-        >
-          Voltar à Vaga
-        </AppButton>
-      }
+  <Box display="flex" gap={1.5}>
+    <AppButton
+      variant="outlined"
+      color="warning"
+      startIcon={<RefreshIcon />}
+      onClick={() => rescore()}
+      loading={isRescoring}
+      disabled={isRescoring}
+    >
+      {isRescoring ? 'Atualizando...' : 'Atualizar Ranking'}
+    </AppButton>
+    <AppButton
+      variant="outlined"
+      startIcon={<ArrowBackIcon />}
+      onClick={() => navigate(`/vacancies/${id}`, { replace: true })}
+    >
+      Voltar à Vaga
+    </AppButton>
+  </Box>
+}
     >
       {isError && (
         <Alert severity="error" sx={{ mb: 3 }}>

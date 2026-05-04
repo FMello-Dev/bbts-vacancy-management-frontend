@@ -86,11 +86,12 @@ src/
 │   │       ├── useApproveVacancy.ts
 │   │       └── useRejectVacancy.ts
 │   ├── candidates/
-│   │   ├── CandidatesByVacancyPage.tsx  # Ranking por vaga
+│   │   ├── CandidatesByVacancyPage.tsx  # Ranking por vaga + botão Atualizar Ranking
 │   │   ├── CandidatesListPage.tsx       # Base de candidatos + filtros (Sprint 3)
 │   │   ├── CandidateDetailPage.tsx      # Perfil completo (Sprint 3)
 │   │   └── hooks/
 │   │       ├── useCandidatesByVacancy.ts
+│   │       ├── useRescoreVacancy.ts     # Recalculo de ranking sob demanda
 │   │       ├── useCandidates.ts         # Sprint 3
 │   │       └── useCandidateDetail.ts    # Sprint 3
 │   └── imports/
@@ -119,7 +120,7 @@ src/
 | `/vacancies` | Lista de vagas | REQUESTER (só suas) / RH (todas) |
 | `/vacancies/new` | Criar nova vaga | REQUESTER |
 | `/vacancies/:id` | Detalhe + submeter para aprovação | Todos |
-| `/vacancies/:id/candidates` | Ranking de candidatos por vaga | Todos |
+| `/vacancies/:id/candidates` | Ranking de candidatos por vaga + Atualizar Ranking | Todos |
 | `/candidates` | Base de candidatos com filtros por skill e localização | Todos |
 | `/candidates/:id` | Perfil completo do candidato | Todos |
 | `/approvals` | Fila de aprovação | RH |
@@ -144,9 +145,17 @@ O fluxo de upload PDF funciona assim:
 2. Faz upload do currículo `.pdf`
 3. O frontend envia para `POST /candidates/import/pdf`
 4. O backend envia o PDF para o **Groq**
-5. O Gemini extrai: nome, skills, experiências, formação, idiomas, certificações
+5. O **Groq (LLaMA 3.3 70B)** extrai: nome, skills, experiências, formação, idiomas, certificações
 6. Os dados são normalizados (sinônimos) e salvos no banco
 7. O frontend exibe o perfil do candidato salvo + botão "Ver perfil completo"
+
+---
+
+## Ranking de candidatos e Atualizar Ranking
+
+O score de cada candidato é calculado automaticamente quando uma vaga é aprovada. Para recalcular o ranking após a importação de novos candidatos, utilize o botão **Atualizar Ranking** disponível na tela `/vacancies/:id/candidates`.
+
+O botão aciona `POST /vacancies/:id/rescore` no backend, que apaga as sugestões existentes e recalcula o score para todos os candidatos cadastrados. A tabela é atualizada automaticamente ao término da operação.
 
 ---
 
