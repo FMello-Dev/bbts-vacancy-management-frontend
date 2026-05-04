@@ -18,7 +18,7 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
-*.ntvs*
+.ntvs
 *.njsproj
 *.sln
 *.sw?
@@ -51,7 +51,7 @@ pnpm-debug.log*
 !.vscode/extensions.json
 .idea/
 *.suo
-*.ntvs*
+.ntvs
 *.njsproj
 *.sln
 *.sw?

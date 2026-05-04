@@ -13,4 +13,5 @@ export const ENDPOINTS = {
   IMPORT_CSV: '/candidates/import/csv',
   IMPORT_PDF: '/candidates/import/pdf',
   IMPORT_TEMPLATE: '/candidates/import/template',
+  RESCORE_VACANCY: (id: string) => `/vacancies/${id}/rescore`,  // ← NOVO
 } as const;
