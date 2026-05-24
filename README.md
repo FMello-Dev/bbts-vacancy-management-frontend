@@ -133,12 +133,12 @@ Após autenticar, o token JWT é salvo no `sessionStorage` e enviado automaticam
 
 O score é calculado automaticamente quando uma vaga é aprovada pelo RH. Se novos candidatos forem importados após a aprovação, clique em **Atualizar Ranking** na tela de candidatos da vaga para recalcular.
 
-O ranking exibe apenas candidatos com score ≥ **30%**. A tela distingue dois cenários:
+O ranking exibe apenas candidatos com score ≥ **40%**. A tela distingue dois cenários:
 
 | Situação | Mensagem exibida |
 |---|---|
 | Vaga sem candidatos cadastrados | "Nenhum candidato encontrado para esta vaga." |
-| Candidatos existem mas nenhum alcança 30% | "Nenhum candidato alcança o mínimo de 30% de score." |
+| Candidatos existem mas nenhum alcança 40% | "Nenhum candidato alcança o mínimo de 40% de score." |
 
 Penalizações aplicadas no score:
 - **-30% por requisito obrigatório ausente**
