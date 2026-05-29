@@ -114,7 +114,7 @@ export default function ImportCandidatesPage() {
         {tab === 0 && (
           <Box>
             <Alert severity="info" sx={{ mb: 3 }} icon={<AutoAwesomeIcon />}>
-              <strong>Google Gemini.</strong> Faça upload do currículo em PDF — a IA extrai automaticamente nome, skills, experiências, formação, idiomas e certificações.
+              <strong>Groq.</strong> Faça upload do currículo em PDF — a IA extrai automaticamente nome, skills, experiências, formação, idiomas e certificações.
             </Alert>
             <Box sx={{ border: '2px dashed', borderColor: pdfFile ? 'primary.main' : 'divider', borderRadius: 3, p: 4, textAlign: 'center', cursor: 'pointer', '&:hover': { borderColor: 'primary.main' } }} onClick={() => pdfRef.current?.click()}>
               <PictureAsPdfIcon sx={{ fontSize: 52, color: pdfFile ? 'primary.main' : 'text.disabled', mb: 1 }} />
